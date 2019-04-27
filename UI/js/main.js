@@ -1,5 +1,10 @@
 $(function() {
 
+    function statsToBtcFormat(sats){
+        return `${(sats/100000000).toFixed(8)} ฿`
+    }
+
+
     $('#api_credentials_file').on('change', function(e){
         const creds_file = document.getElementById('api_credentials_file').files[0]
 
@@ -13,7 +18,7 @@ $(function() {
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
-                    url: 'http://127.0.0.1:8000/users/data',
+                    url: 'https://tadek.tele.com.pl/bitmex-multichecker/users/data',
                     data: e.target.result,
                     dataType: 'json',
                 }).done(function(result){
@@ -25,11 +30,11 @@ $(function() {
 
                         row.append('<th scope="row">'+inc+'</th>')
                         row.append('<td>'+el.username+'</td>')
-                        row.append('<td>'+el.balance+'</td>')
-                        row.append('<td>'+el.position+'</td>')
-                        row.append('<td>'+el.sellOrders+'</td>')
-                        row.append('<td>'+el.deposited+'</td>')
-                        row.append('<td>'+el.withdrawn+'</td>')
+                        row.append('<td>'+statsToBtcFormat(el.balance)+'</td>')
+                        row.append('<td>'+el.position+' contracts</td>')
+                        row.append('<td>'+el.sellOrders+' contracts</td>')
+                        row.append('<td>'+statsToBtcFormat(el.deposited)+'</td>')
+                        row.append('<td>'+statsToBtcFormat(el.withdrawn)+'</td>')
                         row.append('<td>'+el.referer+'</td>')
 
                       $('#table_body').append(row)
