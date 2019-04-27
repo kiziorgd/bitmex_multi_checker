@@ -6,3 +6,4 @@ COPY ./requirements.txt /app
 RUN pip install -r /app/requirements.txt
 
 ENV MODULE_NAME api
+ENV PORT 8291
