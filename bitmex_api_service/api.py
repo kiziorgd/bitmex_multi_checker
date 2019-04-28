@@ -38,8 +38,8 @@ def get_user_data(api_key='', api_secret=''):
     result = {
         "username": user_basic["username"],
         "balance": user_wallet['amount'],
-        "position": position[0]['currentQty'] if len(position) > 0 else 0,
-        "sellOrders": position[0]['openOrderSellQty'] if len(position) > 0 else 0,
+        "position": position[0]['currentQty'] if position else 0,
+        "sellOrders": position[0]['openOrderSellQty'] if position else 0,
         "deposited": user_wallet['deposited'],
         "withdrawn": user_wallet['withdrawn'],
         "referer": int(user_affiliate['referrerAccount']) if user_affiliate['referrerAccount'] else '-'
