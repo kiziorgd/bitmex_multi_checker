@@ -1,3 +1,2 @@
 # Created by .ignore support plugin (hsz.mobi)
-creds.json
-creds2.json
+*.json
