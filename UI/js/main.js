@@ -4,7 +4,6 @@ $(function() {
         return `${(sats/100000000).toFixed(8)} ฿`
     }
 
-
     $('#api_credentials_file').on('change', function(e){
         const creds_file = document.getElementById('api_credentials_file').files[0]
 
@@ -13,34 +12,48 @@ $(function() {
 
             reader.onload = function(e)
             {
-                $('.spinner-grow').toggle()
+                $('.spinner-grow').show()
 
-                $.ajax({
-                    type: 'POST',
-                    contentType: 'application/json',
-                    url: 'https://tadek.tele.com.pl/bitmex-multichecker/users/data',
-//                    url: 'http://127.0.0.1:8000/users/data',
-                    data: e.target.result,
-                    dataType: 'json',
-                }).done(function(result){
-                    let inc = 0;
-                    result.forEach(function(el){
-                        inc++;
-                        let row = $('<tr></tr>')
+                credsList = JSON.parse(e.target.result)
+                let len = credsList.length
+                let inc = 0;
 
-                        row.append('<th scope="row">'+inc+'</th>')
-                        row.append('<td>'+el.username+'</td>')
-                        row.append('<td>'+satsToBtcFormat(el.balance)+'</td>')
-                        row.append('<td>'+el.position+' contracts</td>')
-                        row.append('<td>'+el.sellOrders+' contracts</td>')
-                        row.append('<td>'+satsToBtcFormat(el.deposited)+'</td>')
-                        row.append('<td>'+satsToBtcFormat(el.withdrawn)+'</td>')
-                        row.append('<td>'+el.referer+'</td>')
+                credsList.forEach(function(creds){
+                    setTimeout(function(){
+                        $.ajax({
+                            type: 'POST',
+                            contentType: 'application/json',
+                            url: 'https://tadek.tele.com.pl/bitmex-multichecker/users/data',
+//                            url: 'http://127.0.0.1:8000/users/data',
+                            data: JSON.stringify([creds]),
+                            dataType: 'json',
+                        }).done(function(result){
+                            result.forEach(function(el){
+                                inc++;
+                                let row = $('<tr></tr>')
 
-                      $('#table_body').append(row)
-                    })
+                                row.append('<th scope="row">'+inc+'</th>')
+                                row.append('<td>'+el.username+'</td>')
+                                row.append('<td>'+satsToBtcFormat(el.balance)+'</td>')
+                                row.append('<td>'+el.position+' contracts</td>')
+                                row.append('<td>'+el.sellOrders+' contracts</td>')
+                                row.append('<td>'+satsToBtcFormat(el.deposited)+'</td>')
+                                row.append('<td>'+satsToBtcFormat(el.withdrawn)+'</td>')
+                                row.append('<td>'+el.referer+'</td>')
 
-                    $('.spinner-grow').toggle()
+                                $('#table_body').append(row)
+                            })
+                        }).fail(function(result){
+                            $('#alert-danger').html(result)
+                            $('#alert-danger').toggle()
+                            $('.spinner-grow').hide()
+                        }).always(function(){
+                            if (len === inc){
+                                $('.spinner-grow').hide()
+                            }
+                        })
+                    }, 3000)
+
                 })
             };
 
