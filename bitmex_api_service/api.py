@@ -27,11 +27,9 @@ async def get_all_users_data(api_creds: List[ApiCreds]):
 
 def get_user_data(api_key='', api_secret=''):
     client = bitmex(test=False, api_key=api_key, api_secret=api_secret)
-    print(client)
 
     user = client.User
 
-    # try:
     user_basic = user.User_get().result()[0]
     user_affiliate = user.User_getAffiliateStatus().result()[0]
     user_wallet = user.User_getWallet().result()[0]
@@ -46,6 +44,5 @@ def get_user_data(api_key='', api_secret=''):
         "withdrawn": user_wallet['withdrawn'],
         "referer": int(user_affiliate['referrerAccount']) if user_affiliate['referrerAccount'] else '-'
     }
-    # except:
 
     return result
