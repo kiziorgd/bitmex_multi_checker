@@ -18,8 +18,7 @@ $(function() {
                 $.ajax({
                     type: 'POST',
                     contentType: 'application/json',
-                    url: 'https://tadek.tele.com.pl/bitmex-multichecker/users/data',
-//                    url: 'http://127.0.0.1:8000/users/data',
+                    url: 'http://127.0.0.1:8000/users/data',
                     data: e.target.result,
                     dataType: 'json',
                 }).done(function(result){
