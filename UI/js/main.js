@@ -40,7 +40,7 @@ $(function () {
                 row.append('<td>' + el.sellOrders + '</td>');
                 row.append('<td>' + Checker.satsToBtcFormat(el.deposited) + '</td>');
                 row.append('<td>' + Checker.satsToBtcFormat(el.withdrawn) + '</td>');
-                row.append('<td>' + (el.referer == 777056 ? 'ok' : '-') + '</td>');
+                row.append('<td>' + el.referer + '</td>');
                 row.append('<td>' + creds.api_key + '</td>');
 
                 $('#table_body').append(row);
@@ -57,7 +57,7 @@ $(function () {
             $('.retry-fetch').on('click', function (e) {
                 e.stopPropagation();
                 e.stopImmediatePropagation();
-                console.log('retrying...')
+                console.log('retrying...');
                 $(this).parent('#alert-danger').remove();
                 creds.api_key = $(this).data('key');
                 creds.api_secret = $(this).data('secret');
@@ -97,7 +97,7 @@ $(function () {
                 console.log('fetching data for ' + Checker.credList.length + ' accounts...');
                 let i = 0;
                 Checker.interval = setInterval(function () {
-                        Checker.loadAccountData(Checker.credList[i])
+                        Checker.loadAccountData(Checker.credList[i]);
                         i++;
                         if (i >= Checker.credList.length) {
                             clearInterval(Checker.interval);
