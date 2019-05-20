@@ -18,10 +18,13 @@
                 padding-top: 50px;
                 padding-bottom: 20px;
             }
+
     </style>
 </head>
 <body>
 <div class="container">
+    <row class="errors">
+    </row>
     <form name="upload_credential_list" id="upload_credential_list">
         <div class="form-group">
             <label for="api_credentials_file">Load API credentials</label>
@@ -39,6 +42,7 @@
             <th scope="col">Deposited</th>
             <th scope="col">Withdrawn</th>
             <th scope="col">Referer</th>
+            <th scope="col">Key</th>
         </tr>
         </thead>
         <tbody id="table_body">
