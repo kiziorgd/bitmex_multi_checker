@@ -24,7 +24,7 @@ $(function () {
         },
 
         satsToBtcFormat: function (sats) {
-            return `${(sats / 100000000).toFixed(8)} ฿`;
+            return `${(sats / 100000000).toFixed(8)}`;
         },
 
         appendRow: function (result, creds) {
@@ -32,16 +32,39 @@ $(function () {
                 Checker.rowsRendered++;
 
                 let row = $('<tr></tr>');
+                let depositLimit = creds.deposit_limit;
+                let balanceBtc = Checker.satsToBtcFormat(el.balance);
+                let depositedBtc = Checker.satsToBtcFormat(el.deposited);
+                let withdrawnBtc = Checker.satsToBtcFormat(el.withdrawn);
+                let profitShare = creds.profit_share_percent;
+                let paid = creds.paid;
+
+                let profitLimitReached = false;
+                if (profitShare != null && paid != null) {
+                    let profitBtc = parseFloat(balanceBtc) - parseFloat(depositedBtc);
+                    profitLimitReached = (profitBtc * profitShare / 100) >= paid;
+                }
 
                 row.append('<th scope="row">' + Checker.rowsRendered + '</th>');
                 row.append('<td>' + el.username + '</td>');
-                row.append('<td>' + Checker.satsToBtcFormat(el.balance) + '</td>');
+                row.append('<td>฿' + balanceBtc + '</td>');
                 row.append('<td>' + el.position + '</td>');
                 row.append('<td>' + el.sellOrders + '</td>');
-                row.append('<td>' + Checker.satsToBtcFormat(el.deposited) + '</td>');
-                row.append('<td>' + Checker.satsToBtcFormat(el.withdrawn) + '</td>');
+                row.append('<td>฿' + depositedBtc + '</td>');
+                row.append('<td>฿' + withdrawnBtc + '</td>');
+                row.append('<td>' + (depositLimit != null ? depositLimit : 'no limit') + '</td>');
                 row.append('<td>' + el.referer + '</td>');
                 row.append('<td>' + creds.api_key + '</td>');
+
+                if (depositLimit != null) {
+                    if (depositLimit < parseFloat(depositedBtc)) {
+                        row.addClass('red');
+                    }
+                }
+
+                if (profitLimitReached) {
+                    row.addClass('green');
+                }
 
                 $('#table_body').append(row);
             });
