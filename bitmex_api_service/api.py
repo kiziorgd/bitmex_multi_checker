@@ -3,6 +3,7 @@ from bitmex import bitmex
 from fastapi import FastAPI
 from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
+from json import dumps
 
 
 class ApiCreds(BaseModel):
@@ -34,16 +35,19 @@ def get_user_data(api_key='', api_secret=''):
     user_affiliate = user.User_getAffiliateStatus().result()[0]
     user_wallet = user.User_getWallet().result()[0]
     user_margin = user.User_getMargin().result()[0]
-    position = client.Position.Position_get(filter='{"symbol":"XBTUSD"}').result()[0]
+    position = client.Position.Position_get(filter=dumps({'symbol': 'XBTUSD'})).result()[0]
+    orders = client.Order.Order_getOrders(filter=dumps({'open': True})).response().incoming_response.json()
 
     result = {
-        "username": user_basic["username"],
-        "balance": user_margin['walletBalance'],
-        "position": position[0]['currentQty'] if position else 0,
-        "sellOrders": position[0]['openOrderSellQty'] if position else 0,
-        "deposited": user_wallet['deposited'],
-        "withdrawn": user_wallet['withdrawn'],
-        "referer": int(user_affiliate['referrerAccount']) if user_affiliate['referrerAccount'] else '-'
+        'username': user_basic['username'],
+        'balance': user_margin['walletBalance'],
+        'position': position[0]['currentQty'] if position else 0,
+        'avgEntryPrice': position[0]['avgEntryPrice'] if position else 0,
+        'sellOrders': position[0]['openOrderSellQty'] if position else 0,
+        'deposited': user_wallet['deposited'],
+        'withdrawn': user_wallet['withdrawn'],
+        'referer': int(user_affiliate['referrerAccount']) if user_affiliate['referrerAccount'] else '-',
+        'openOrders': orders
     }
 
     return result

@@ -49,6 +49,7 @@ $(function () {
                 row.append('<td>' + el.username + '</td>');
                 row.append('<td>฿' + balanceBtc + '</td>');
                 row.append('<td>' + el.position + '</td>');
+                row.append('<td>' + el.avgEntryPrice.toFixed(2) + '</td>');
                 row.append('<td>' + el.sellOrders + '</td>');
                 row.append('<td>฿' + depositedBtc + '</td>');
                 row.append('<td>฿' + withdrawnBtc + '</td>');
@@ -67,6 +68,15 @@ $(function () {
                 }
 
                 $('#table_body').append(row);
+
+                if (el.openOrders.length > 0) {
+                    console.table(el.openOrders);
+                    el.openOrders.forEach(function (order) {
+                        $('#table_body').append('<tr><td colspan="11"><strong>' + order.side + ' ' + order.orderQty + ' ' + order.symbol + ' ' + 'at ' + order.price +
+                            '</strong> ' + order.execInst + ' ' + order.timestamp + '</td></tr>');
+                    });
+
+                }
             });
         },
 

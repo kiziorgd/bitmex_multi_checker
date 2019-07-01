@@ -7,9 +7,9 @@
 }
 
 tr.red {
-    background-color: red;
+    background-color: red !important;
 }
 
 tr.green {
-    background-color: green;
+    background-color: green !important;
 }
