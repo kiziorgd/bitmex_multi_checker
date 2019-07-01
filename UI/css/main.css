@@ -5,3 +5,11 @@
 .retry-fetch {
     margin-left: 25px;
 }
+
+tr.red {
+    background-color: red !important;
+}
+
+tr.green {
+    background-color: green !important;
+}

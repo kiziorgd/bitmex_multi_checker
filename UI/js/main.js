@@ -24,7 +24,7 @@ $(function () {
         },
 
         satsToBtcFormat: function (sats) {
-            return `${(sats / 100000000).toFixed(8)} ฿`;
+            return `${(sats / 100000000).toFixed(8)}`;
         },
 
         appendRow: function (result, creds) {
@@ -32,18 +32,51 @@ $(function () {
                 Checker.rowsRendered++;
 
                 let row = $('<tr></tr>');
+                let depositLimit = creds.deposit_limit;
+                let balanceBtc = Checker.satsToBtcFormat(el.balance);
+                let depositedBtc = Checker.satsToBtcFormat(el.deposited);
+                let withdrawnBtc = Checker.satsToBtcFormat(el.withdrawn);
+                let profitShare = creds.profit_share_percent;
+                let paid = creds.paid;
+
+                let profitLimitReached = false;
+                if (profitShare != null && paid != null) {
+                    let profitBtc = parseFloat(balanceBtc) - parseFloat(depositedBtc);
+                    profitLimitReached = (profitBtc * profitShare / 100) >= paid;
+                }
 
                 row.append('<th scope="row">' + Checker.rowsRendered + '</th>');
                 row.append('<td>' + el.username + '</td>');
-                row.append('<td>' + Checker.satsToBtcFormat(el.balance) + '</td>');
+                row.append('<td>฿' + balanceBtc + '</td>');
                 row.append('<td>' + el.position + '</td>');
+                row.append('<td>' + el.avgEntryPrice.toFixed(2) + '</td>');
                 row.append('<td>' + el.sellOrders + '</td>');
-                row.append('<td>' + Checker.satsToBtcFormat(el.deposited) + '</td>');
-                row.append('<td>' + Checker.satsToBtcFormat(el.withdrawn) + '</td>');
-                row.append('<td>' + (el.referer == 777056 ? 'ok' : '-') + '</td>');
+                row.append('<td>฿' + depositedBtc + '</td>');
+                row.append('<td>฿' + withdrawnBtc + '</td>');
+                row.append('<td>' + (depositLimit != null ? depositLimit : 'no limit') + '</td>');
+                row.append('<td>' + el.referer + '</td>');
                 row.append('<td>' + creds.api_key + '</td>');
 
+                if (depositLimit != null) {
+                    if (depositLimit < parseFloat(depositedBtc)) {
+                        row.addClass('red');
+                    }
+                }
+
+                if (profitLimitReached) {
+                    row.addClass('green');
+                }
+
                 $('#table_body').append(row);
+
+                if (el.openOrders.length > 0) {
+                    console.table(el.openOrders);
+                    el.openOrders.forEach(function (order) {
+                        $('#table_body').append('<tr><td colspan="11"><strong>' + order.side + ' ' + order.orderQty + ' ' + order.symbol + ' ' + 'at ' + order.price +
+                            '</strong> ' + order.execInst + ' ' + order.timestamp + '</td></tr>');
+                    });
+
+                }
             });
         },
 
@@ -57,7 +90,7 @@ $(function () {
             $('.retry-fetch').on('click', function (e) {
                 e.stopPropagation();
                 e.stopImmediatePropagation();
-                console.log('retrying...')
+                console.log('retrying...');
                 $(this).parent('#alert-danger').remove();
                 creds.api_key = $(this).data('key');
                 creds.api_secret = $(this).data('secret');
@@ -97,7 +130,7 @@ $(function () {
                 console.log('fetching data for ' + Checker.credList.length + ' accounts...');
                 let i = 0;
                 Checker.interval = setInterval(function () {
-                        Checker.loadAccountData(Checker.credList[i])
+                        Checker.loadAccountData(Checker.credList[i]);
                         i++;
                         if (i >= Checker.credList.length) {
                             clearInterval(Checker.interval);
