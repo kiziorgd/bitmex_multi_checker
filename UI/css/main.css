@@ -13,3 +13,8 @@ tr.red {
 tr.green {
     background-color: green !important;
 }
+
+.username {
+    background-color: white;
+    color: #0f0f0f;
+}
