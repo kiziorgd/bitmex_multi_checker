@@ -46,10 +46,12 @@ $(function () {
                 }
 
                 row.append('<th scope="row">' + Checker.rowsRendered + '</th>');
-                row.append('<td>' + el.username + '</td>');
+                row.append('<td class="username">' + el.username + '</td>');
                 row.append('<td>฿' + balanceBtc + '</td>');
                 row.append('<td>' + el.position + '</td>');
                 row.append('<td>' + el.avgEntryPrice.toFixed(2) + '</td>');
+                row.append('<td>' + el.hedge + '</td>');
+                row.append('<td>' + el.hedgeAvgEntryPrice.toFixed(2) + '</td>');
                 row.append('<td>' + el.sellOrders + '</td>');
                 row.append('<td>฿' + depositedBtc + '</td>');
                 row.append('<td>฿' + withdrawnBtc + '</td>');
@@ -105,16 +107,16 @@ $(function () {
             }
         },
 
-        loadAccountData: function (creds) {
+        loadAccountData: function (data) {
             Checker.spinner.show();
-            Checker.ajaxSettings.data = JSON.stringify([creds]);
-            console.log('fetching: ' + creds.api_key);
+            Checker.ajaxSettings.data = JSON.stringify([data]);
+            console.log('fetching: ' + data.api_key);
             $.ajax(
                 Checker.ajaxSettings
             ).done(function (result) {
-                Checker.appendRow(result, creds);
+                Checker.appendRow(result, data);
             }).fail(function () {
-                Checker.handleError(creds);
+                Checker.handleError(data);
             }).always(function () {
                 Checker.finishRendering();
             })
@@ -129,8 +131,11 @@ $(function () {
                 Checker.credList = JSON.parse(e.target.result);
                 console.log('fetching data for ' + Checker.credList.length + ' accounts...');
                 let i = 0;
+                let data = Checker.credList[i];
+                data.api_hedge_contract = $('#api_hedge_contract').val();
+                console.log(data);
                 Checker.interval = setInterval(function () {
-                        Checker.loadAccountData(Checker.credList[i]);
+                        Checker.loadAccountData(data);
                         i++;
                         if (i >= Checker.credList.length) {
                             clearInterval(Checker.interval);
