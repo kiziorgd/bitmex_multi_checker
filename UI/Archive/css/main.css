@@ -1,0 +1,20 @@
+.container {
+    font-size: 13px;
+}
+
+.retry-fetch {
+    margin-left: 25px;
+}
+
+tr.red {
+    background-color: red !important;
+}
+
+tr.green {
+    background-color: green !important;
+}
+
+.username {
+    background-color: white;
+    color: #0f0f0f;
+}

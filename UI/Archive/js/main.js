@@ -72,9 +72,14 @@ $(function () {
                 $('#table_body').append(row);
 
                 if (el.openOrders.length > 0) {
+
                     console.table(el.openOrders);
                     el.openOrders.forEach(function (order) {
-                        $('#table_body').append('<tr data-contract="' + order.symbol + '"><td colspan="11"><strong>' + order.side + ' ' + order.orderQty + ' ' + order.symbol + ' ' + 'at ' + order.price +
+                        if (order.symbol !== 'XBTH20') {
+                            return;
+                        }
+                        console.log(order)
+                        $('#table_body').append('<tr data-contract="order.symbol"><td colspan="11"><strong>' + order.side + ' ' + order.orderQty + ' ' + order.symbol + ' ' + 'at ' + order.price +
                             '</strong> ' + order.execInst + ' ' + order.timestamp + ' <strong> STOP PRICE: ' + order.stopPx + '</strong></td></tr>');
                     });
 
@@ -109,6 +114,7 @@ $(function () {
 
         loadAccountData: function (data) {
             Checker.spinner.show();
+            Checker.spinner.show();
             Checker.ajaxSettings.data = JSON.stringify([data]);
             console.log('fetching: ' + data.api_key);
             $.ajax(
@@ -129,7 +135,8 @@ $(function () {
             Checker.fileReader.onload = function (e) {
                 Checker.spinner.show();
                 Checker.credList = JSON.parse(e.target.result);
-                console.log('fetching data for ' + Checker.credList.length + ' accounts...');
+                // console.log(Checker.credList)
+                // console.log('fetching data for ' + Checker.credList.length + ' accounts...');
                 let i = 0;
                 console.log(i);
 
