@@ -28,7 +28,7 @@ strict-rfc3339==0.7
 swagger-spec-validator==2.4.3
 typing-extensions==3.7.2
 urllib3==1.24.2
-uvicorn==0.7.0
+uvicorn==0.11.7
 uvloop==0.12.2
 webcolors==1.8.1
 websockets==7.0
