@@ -31,4 +31,4 @@ urllib3==1.24.2
 uvicorn==0.7.0
 uvloop==0.12.2
 webcolors==1.8.1
-websockets==7.0
+websockets==9.1
