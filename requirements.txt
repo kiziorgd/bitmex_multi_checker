@@ -2,7 +2,7 @@ attrs==19.1.0
 bitmex==0.2.2
 bravado==10.3.2
 bravado-core==5.12.0
-certifi==2019.3.9
+certifi==2022.12.7
 chardet==3.0.4
 Click==7.0
 fastapi==0.20.0
